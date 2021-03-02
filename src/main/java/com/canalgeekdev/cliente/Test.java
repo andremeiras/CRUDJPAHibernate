@@ -5,38 +5,21 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-
-import com.canalgeekdev.cliente.model.Cliente;
-import com.mysql.cj.xdevapi.Client;
 
 public class Test {
     private static EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("BancoPU");
     private static EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     public static void main(String[] args) {
-        
-        // String jpql = "select c from Cliente c";
-        // TypedQuery<Cliente> typedQuery = entityManager.createQuery(jpql, Cliente.class);
-        // List<Cliente> listaCliente = typedQuery.getResultList();
 
-        // for(Cliente cliente: listaCliente) {
-        //     System.out.println(cliente.getNome());
-        // }
-        
-        String jpql = "select c from Cliente c where id = :idCliente";
+        entityManager.getTransaction().begin();
 
-        int idCliente = 3;
+        int idCliente = 4;
 
-        TypedQuery<Cliente> typedQuery = entityManager
-                    .createQuery(jpql, Cliente.class)
-                    .setParameter("idCliente", idCliente);
-        List<Cliente> listaCliente = typedQuery.getResultList();
+        entityManager.createQuery("delete from Cliente c where id = :idCliente").setParameter("idCliente", idCliente)
+                .executeUpdate();
 
-        for(Cliente cliente: listaCliente) {
-            System.out.println(cliente.getNome());
-        }
-        
+        entityManager.getTransaction().commit();
 
         entityManager.close();
         entityManagerFactory.close();
